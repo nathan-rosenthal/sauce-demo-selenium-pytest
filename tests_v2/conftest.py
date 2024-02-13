@@ -25,16 +25,16 @@ def pytest_exception_interact(report):
                       attachment_type=allure.attachment_type.PNG)
 
 
-def pytest_sessionfinish() -> None:
-    environment_properties = {
-        'browser': driver.name,
-        'browser_version': driver.capabilities['browserVersion'],
-        'platform_name': driver.capabilities['platformName']
-    }
-    allure_env_path = os.path.join("allure-results", 'environment.properties')
-    with open(allure_env_path, 'w') as f:
-        data = '\n'.join([f'{variable}={value}' for variable, value in environment_properties.items()])
-        f.write(data)
+# def pytest_sessionfinish() -> None:
+#     environment_properties = {
+#         'browser': driver.name,
+#         'browser_version': driver.capabilities['browserVersion'],
+#         'platform_name': driver.capabilities['platformName']
+#     }
+#     allure_env_path = os.path.join("allure-results", 'environment.properties')
+#     with open(allure_env_path, 'w') as f:
+#         data = '\n'.join([f'{variable}={value}' for variable, value in environment_properties.items()])
+#         f.write(data)
 
 
 @pytest.fixture(scope="class", autouse=True)
