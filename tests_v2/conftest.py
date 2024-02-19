@@ -19,24 +19,6 @@ STANDARD_USERNAME = 'standard_user'
 PASSWORD_ALL = 'secret_sauce'
 
 
-# def pytest_exception_interact(report):
-#     if report.failed:
-#         allure.attach(body=driver.get_screenshot_as_png(), name="screenshot",
-#                       attachment_type=allure.attachment_type.PNG)
-
-
-# def pytest_sessionfinish() -> None:
-#     environment_properties = {
-#         'browser': driver.name,
-#         'browser_version': driver.capabilities['browserVersion'],
-#         'platform_name': driver.capabilities['platformName']
-#     }
-#     allure_env_path = os.path.join("allure-results", 'environment.properties')
-#     with open(allure_env_path, 'w') as f:
-#         data = '\n'.join([f'{variable}={value}' for variable, value in environment_properties.items()])
-#         f.write(data)
-
-
 @pytest.fixture(scope="class", autouse=True)
 def setup(request):
     global driver
@@ -46,7 +28,6 @@ def setup(request):
     request.cls.driver = driver
     driver.maximize_window()
     yield
-    # Teardown - close browser and shutdown driver
     driver.quit()
 
 
@@ -88,3 +69,23 @@ def login(request, page_objects):
     # App Teardown - Reset App State & Logout at the end of each test that did login
     if not exclude_logout:
         page_objects["side_bar_menu"].reset_app_state_and_logout()
+
+
+@pytest.hookimpl()
+def pytest_exception_interact(report):
+    if report.failed:
+        allure.attach(body=driver.get_screenshot_as_png(), name="screenshot",
+                      attachment_type=allure.attachment_type.PNG)
+
+
+@pytest.hookimpl()
+def pytest_sessionfinish() -> None:
+    environment_properties = {
+        'browser': driver.name,
+        'browser_version': driver.capabilities['browserVersion'],
+        'platform_name': driver.capabilities['platformName']
+    }
+    allure_env_path = os.path.join("allure-results", 'environment.properties')
+    with open(allure_env_path, 'w') as f:
+        data = '\n'.join([f'{variable}={value}' for variable, value in environment_properties.items()])
+        f.write(data)
