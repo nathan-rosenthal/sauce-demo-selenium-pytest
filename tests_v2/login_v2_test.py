@@ -15,7 +15,7 @@ class TestLogin:
     PASSWORD_ALL = 'secret_sauce'
 
     @allure.severity(Severity.BLOCKER)
-    @allure.description("Log in with Standard user credentials and check user is logged in")
+    @allure.description("Log in with standard user credentials and check user is logged in")
     @allure.title("Login as a Standard User")
     @allure.story("As a regular user, i should be able to log in to the application")
     @pytest.mark.exclude_login
